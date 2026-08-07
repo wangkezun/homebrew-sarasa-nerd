@@ -4,12 +4,17 @@ THIS_REPO="wangkezun/homebrew-sarasa-nerd"
 
 # Supported font family/locale variants. select_variant sets all derived names
 # used by the build, verification, cask, and release scripts.
-VARIANTS=("term-sc" "term-tc")
+VARIANTS=("term-sc" "term-tc" "term-j" "term-k")
 select_variant() {
   FONT_VARIANT="$1"
+  MD_MAX_KEEP=5100
   case "$FONT_VARIANT" in
     term-sc) LOCALE="SC"; LOCALE_SLUG="sc" ;;
     term-tc) LOCALE="TC"; LOCALE_SLUG="tc" ;;
+    # Japanese adds more base glyphs than the other locales, leaving less room
+    # below the sfnt 65535-glyph ceiling for the Material Design subset.
+    term-j) LOCALE="J"; LOCALE_SLUG="j"; MD_MAX_KEEP=3600 ;;
+    term-k) LOCALE="K"; LOCALE_SLUG="k" ;;
     *) echo "unknown variant: $FONT_VARIANT" >&2; return 1 ;;
   esac
 

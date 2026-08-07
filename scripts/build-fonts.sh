@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/build-fonts.sh <upstream_version_tag> [term-sc|term-tc]
+# scripts/build-fonts.sh <upstream_version_tag> [variant]
 # Produces ten TTF faces and one TTC under dist/<variant>/.
 set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -44,7 +44,7 @@ fi
 # 3. build trimmed Material Design subset once (shared across weights), added via --custom
 MD_SUBSET="$WORK/md-subset.ttf"
 python3 "$DIR/scripts/make-md-subset.py" \
-  "$FP/$MD_GLYPH_SRC" "$FP/glyphnames.json" "$DIR/$MD_WHITELIST" "$MD_SUBSET"
+  "$FP/$MD_GLYPH_SRC" "$FP/glyphnames.json" "$DIR/$MD_WHITELIST" "$MD_SUBSET" "$MD_MAX_KEEP"
 
 # 4. extract + patch each face
 for face in "${FACES[@]}"; do

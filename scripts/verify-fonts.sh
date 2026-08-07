@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/verify-fonts.sh <font.ttf|font.ttc> [term-sc|term-tc]
+# scripts/verify-fonts.sh <font.ttf|font.ttc> [variant]
 # Asserts: Latin A=500, CJK 你=1000, glyphs<65535, family name, key icons present,
 # correct weight/style metadata, and post.isFixedPitch=1 (CoreText monospace trait).
 # For a .ttc, all ten expected faces must be present.
