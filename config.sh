@@ -6,7 +6,7 @@ THIS_REPO="wangkezun/homebrew-sarasa-nerd"
 # used by the build, verification, cask, and release scripts.
 VARIANTS=(
   "term-sc" "term-tc" "term-j" "term-k" "term-hc" "term-cl"
-  "term-slab-sc" "term-slab-tc"
+  "term-slab-sc" "term-slab-tc" "term-slab-j" "term-slab-k"
 )
 select_variant() {
   FONT_VARIANT="$1"
@@ -29,6 +29,14 @@ select_variant() {
       ;;
     term-slab-tc)
       LOCALE="TC"; LOCALE_SLUG="tc"
+      FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
+      ;;
+    term-slab-j)
+      LOCALE="J"; LOCALE_SLUG="j"; MD_MAX_KEEP=3600
+      FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
+      ;;
+    term-slab-k)
+      LOCALE="K"; LOCALE_SLUG="k"
       FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
       ;;
     *) echo "unknown variant: $FONT_VARIANT" >&2; return 1 ;;

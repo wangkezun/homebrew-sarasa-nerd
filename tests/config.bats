@@ -2,9 +2,27 @@
 setup() { source "${BATS_TEST_DIRNAME}/../config.sh"; }
 
 @test "supported variants expose all ten upstream faces" {
-  [ "${VARIANTS[*]}" = "term-sc term-tc term-j term-k term-hc term-cl term-slab-sc term-slab-tc" ]
+  [ "${VARIANTS[*]}" = "term-sc term-tc term-j term-k term-hc term-cl term-slab-sc term-slab-tc term-slab-j term-slab-k" ]
   [ "${#FACES[@]}" -eq 10 ]
   [ "${FACES[*]}" = "XLight XLightItalic Light LightItalic Regular Italic SemiBold SemiBoldItalic Bold BoldItalic" ]
+}
+
+@test "Term Slab J and K derive distinct source, output, and cask names" {
+  select_variant term-slab-j
+  [ "$SUBFONT_BASE" = "Sarasa Term Slab J" ]
+  [ "$SOURCE_STEM" = "SarasaTermSlabJ" ]
+  [ "$FILE_STEM" = "SarasaTermSlabJNerdFontMono" ]
+  [ "$PATCHED_FAMILY" = "SarasaTermSlabJ Nerd Font Mono" ]
+  [ "$CASK_TOKEN" = "font-sarasa-term-slab-j-nerd" ]
+  [ "$MD_MAX_KEEP" -eq 3600 ]
+  [ "$(face_subfont BoldItalic)" = "Sarasa Term Slab J Bold Italic" ]
+
+  select_variant term-slab-k
+  [ "$SUBFONT_BASE" = "Sarasa Term Slab K" ]
+  [ "$SOURCE_STEM" = "SarasaTermSlabK" ]
+  [ "$FILE_STEM" = "SarasaTermSlabKNerdFontMono" ]
+  [ "$CASK_TOKEN" = "font-sarasa-term-slab-k-nerd" ]
+  [ "$MD_MAX_KEEP" -eq 5100 ]
 }
 
 @test "Term Slab SC and TC derive distinct source, output, and cask names" {
