@@ -1,6 +1,6 @@
 cask "font-sarasa-term-cl-nerd" do
   version "v1.0.40"
-  sha256 "7983990aa71820748490edc4296cea6c07c13f2fd12244b6955ddbc18faf4d05"
+  sha256 "5631e20d3a0d40d25ba80ef4889884db8dbfb98d96914712ccb4f9c05cd636a5"
 
   url "https://github.com/wangkezun/homebrew-sarasa-nerd/releases/download/v1.0.40/SarasaTermCLNerdFontMono.ttc"
   name "Sarasa Term CL Nerd Font Mono"
