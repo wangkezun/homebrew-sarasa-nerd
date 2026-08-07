@@ -9,4 +9,5 @@ setup() { source "${BATS_TEST_DIRNAME}/../scripts/update-cask.sh"; }
   [[ "$output" == *'url "https://example.com/x.ttc"'* ]]
   [[ "$output" == *'font "SarasaTermSCNerdFontMono.ttc"'* ]]
   [[ "$output" == *'cask "font-sarasa-term-sc-nerd"'* ]]
+  [[ "$output" == *'homepage "https://github.com/wangkezun/homebrew-sarasa-nerd"'* ]]
 }

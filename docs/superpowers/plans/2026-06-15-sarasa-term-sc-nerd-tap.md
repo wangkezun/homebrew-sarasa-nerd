@@ -13,7 +13,7 @@
 ## File Structure
 
 ```
-homebrew-sarasa-term-sc-nerd/
+homebrew-sarasa-nerd/
 ├── README.md                              # install + how-it-works
 ├── LICENSE-OFL.txt                        # SIL OFL 1.1 (Sarasa)
 ├── LICENSE-NERDFONTS.txt                  # Nerd Fonts MIT
@@ -48,7 +48,7 @@ Responsibilities: each script does one thing and is independently runnable. `con
 ```bash
 # config.sh — single source of truth, sourced by all scripts.
 UPSTREAM_REPO="be5invis/Sarasa-Gothic"
-THIS_REPO="wangkezun/homebrew-sarasa-term-sc-nerd"
+THIS_REPO="wangkezun/homebrew-sarasa-nerd"
 
 # Subfont name (in SuperTTC)  ->  clean output weight label
 # Regular has no suffix in the SuperTTC subfont name.
@@ -527,7 +527,7 @@ Run (uses the `dist/` from Task 5; produces a real, installable cask before CI e
 export GITHUB_TOKEN=$(gh auth token)
 LATEST=$(cat /dev/stdin <<<"$(curl -fsSL -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest | jq -r .tag_name)")
 SHA=$(shasum -a 256 dist/SarasaTermSCNerdFontMono.ttc | awk '{print $1}')
-URL="https://github.com/wangkezun/homebrew-sarasa-term-sc-nerd/releases/download/${LATEST}/SarasaTermSCNerdFontMono.ttc"
+URL="https://github.com/wangkezun/homebrew-sarasa-nerd/releases/download/${LATEST}/SarasaTermSCNerdFontMono.ttc"
 scripts/update-cask.sh "$LATEST" "$SHA" "$URL"
 cat Casks/font-sarasa-term-sc-nerd.rb version.txt
 ```
@@ -545,7 +545,7 @@ and uses an **enlarged icon size** (`--cell 0:540`). Auto-rebuilt whenever
 ## Install
 
 \`\`\`bash
-brew tap wangkezun/sarasa-term-sc-nerd
+brew tap wangkezun/sarasa-nerd
 brew install --cask font-sarasa-term-sc-nerd
 \`\`\`
 
@@ -569,7 +569,7 @@ Patched fonts are renamed ("… Nerd Font Mono") per OFL.
 ```bash
 git add Casks/font-sarasa-term-sc-nerd.rb version.txt README.md
 git commit -m "feat: bootstrap cask and README"
-gh repo create wangkezun/homebrew-sarasa-term-sc-nerd --public --source=. --remote=origin --push
+gh repo create wangkezun/homebrew-sarasa-nerd --public --source=. --remote=origin --push
 ```
 Expected: repo created and pushed; Actions tab shows the workflow.
 
@@ -606,8 +606,8 @@ Expected: `build` job runs, verifies, (re)uploads release assets, and commits `r
 
 Run:
 ```bash
-brew untap wangkezun/sarasa-term-sc-nerd 2>/dev/null || true
-brew tap wangkezun/sarasa-term-sc-nerd
+brew untap wangkezun/sarasa-nerd 2>/dev/null || true
+brew tap wangkezun/sarasa-nerd
 brew install --cask font-sarasa-term-sc-nerd
 ls -la ~/Library/Fonts/SarasaTermSCNerdFontMono.ttc
 ```

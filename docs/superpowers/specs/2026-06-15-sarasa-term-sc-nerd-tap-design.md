@@ -19,7 +19,7 @@
 
 ## 架构:单仓库
 
-仓库 `wangkezun/homebrew-sarasa-term-sc-nerd` 同时承担两个角色:
+仓库 `wangkezun/homebrew-sarasa-nerd` 同时承担两个角色:
 
 1. **构建自动化**:`.github/workflows/build.yml`
 2. **Homebrew tap**:`Casks/font-sarasa-term-sc-nerd.rb`
@@ -31,7 +31,7 @@ CI 用内置 `GITHUB_TOKEN` 直接 push 回本仓库更新 cask,无需额外 PAT
 ## 安装体验
 
 ```bash
-brew tap wangkezun/sarasa-term-sc-nerd
+brew tap wangkezun/sarasa-nerd
 brew install --cask font-sarasa-term-sc-nerd     # 装 TTC 单文件
 # 之后:
 brew update && brew upgrade                       # 自动拿新版本

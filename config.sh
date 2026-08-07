@@ -1,6 +1,6 @@
 # config.sh — single source of truth, sourced by all scripts.
 UPSTREAM_REPO="be5invis/Sarasa-Gothic"
-THIS_REPO="wangkezun/homebrew-sarasa-term-sc-nerd"
+THIS_REPO="wangkezun/homebrew-sarasa-nerd"
 
 # Subfont name (in SuperTTC) -> clean output face label.  Sarasa ships five
 # weights, each with upright and italic faces.  Regular has no weight suffix in
