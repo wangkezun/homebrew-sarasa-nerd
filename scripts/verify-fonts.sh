@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # scripts/verify-fonts.sh <font.ttf|font.ttc>
 # Asserts: Latin A=500, CJK 你=1000, glyphs<65535, family name, key icons present,
-# post.isFixedPitch=1 (CoreText monospace trait). For a .ttc, every face is checked.
+# correct weight/style metadata, and post.isFixedPitch=1 (CoreText monospace trait).
+# For a .ttc, all ten expected faces must be present.
 set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$DIR/config.sh"
@@ -33,13 +34,42 @@ print("VERIFY OK: %s (%d face[s])" % (path, len(names or [None])))
 ' "$FONT" "$PATCHED_FAMILY" "$GLYPH_LIMIT"
 
 # post.isFixedPitch drives the macOS/CoreText monospace trait; fontforge can't read it, use fontTools.
-python3 - "$FONT" <<'PY'
+python3 - "$FONT" "$PATCHED_FAMILY" <<'PY'
 import sys
 from fontTools.ttLib import TTFont, TTCollection
 path = sys.argv[1]
+family = sys.argv[2]
 fonts = TTCollection(path).fonts if path.lower().endswith(".ttc") else [TTFont(path)]
 bad = [i for i, f in enumerate(fonts) if f["post"].isFixedPitch != 1]
 if bad:
     sys.exit("VERIFY FAIL: post.isFixedPitch != 1 on face(s) %s" % bad)
-print("VERIFY OK: isFixedPitch=1 (%d face[s])" % len(fonts))
+
+expected = {
+    ("ExtraLight", 200, False), ("ExtraLight Italic", 200, True),
+    ("Light", 300, False), ("Light Italic", 300, True),
+    ("Regular", 400, False), ("Italic", 400, True),
+    ("SemiBold", 600, False), ("SemiBold Italic", 600, True),
+    ("Bold", 700, False), ("Bold Italic", 700, True),
+}
+actual = set()
+problems = []
+for i, f in enumerate(fonts):
+    name = f["name"]
+    face_family = name.getDebugName(16) or name.getDebugName(1)
+    style = name.getDebugName(17) or name.getDebugName(2)
+    weight = f["OS/2"].usWeightClass
+    italic = bool(f["head"].macStyle & 0x02)
+    if face_family != family:
+        problems.append("face %d family %r != %r" % (i, face_family, family))
+    item = (style, weight, italic)
+    actual.add(item)
+    if item not in expected:
+        problems.append("face %d unexpected style/weight/italic %r" % (i, item))
+
+if path.lower().endswith(".ttc") and actual != expected:
+    problems.append("TTC face set mismatch; missing=%r extra=%r" %
+                    (sorted(expected - actual), sorted(actual - expected)))
+if problems:
+    sys.exit("VERIFY FAIL: " + "; ".join(problems))
+print("VERIFY OK: metadata and isFixedPitch=1 (%d face[s])" % len(fonts))
 PY

@@ -12,7 +12,7 @@ cask "${CASK_TOKEN}" do
 
   url "$3"
   name "Sarasa Term SC Nerd Font Mono"
-  desc "Sarasa Term SC patched with Nerd Fonts (CJK 2:1 width preserved, enlarged icons)"
+  desc "Sarasa Term SC in five weights patched with Nerd Fonts (CJK 2:1 width preserved)"
   homepage "https://github.com/${THIS_REPO}"
 
   font "${TTC_NAME}"
