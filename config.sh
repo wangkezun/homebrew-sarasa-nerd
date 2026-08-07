@@ -4,10 +4,16 @@ THIS_REPO="wangkezun/homebrew-sarasa-nerd"
 
 # Supported font family/locale variants. select_variant sets all derived names
 # used by the build, verification, cask, and release scripts.
-VARIANTS=("term-sc" "term-tc" "term-j" "term-k" "term-hc" "term-cl")
+VARIANTS=(
+  "term-sc" "term-tc" "term-j" "term-k" "term-hc" "term-cl"
+  "term-slab-sc" "term-slab-tc"
+)
 select_variant() {
   FONT_VARIANT="$1"
   MD_MAX_KEEP=5100
+  FAMILY_LABEL="Term"
+  FILE_KIND="Term"
+  CASK_KIND="term"
   case "$FONT_VARIANT" in
     term-sc) LOCALE="SC"; LOCALE_SLUG="sc" ;;
     term-tc) LOCALE="TC"; LOCALE_SLUG="tc" ;;
@@ -17,16 +23,25 @@ select_variant() {
     term-k) LOCALE="K"; LOCALE_SLUG="k" ;;
     term-hc) LOCALE="HC"; LOCALE_SLUG="hc" ;;
     term-cl) LOCALE="CL"; LOCALE_SLUG="cl" ;;
+    term-slab-sc)
+      LOCALE="SC"; LOCALE_SLUG="sc"
+      FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
+      ;;
+    term-slab-tc)
+      LOCALE="TC"; LOCALE_SLUG="tc"
+      FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
+      ;;
     *) echo "unknown variant: $FONT_VARIANT" >&2; return 1 ;;
   esac
 
-  SUBFONT_BASE="Sarasa Term $LOCALE"
-  FILE_STEM="SarasaTerm${LOCALE}NerdFontMono"
-  PATCHED_FAMILY="SarasaTerm${LOCALE} Nerd Font Mono"
+  SUBFONT_BASE="Sarasa $FAMILY_LABEL $LOCALE"
+  SOURCE_STEM="Sarasa${FILE_KIND}${LOCALE}"
+  FILE_STEM="${SOURCE_STEM}NerdFontMono"
+  PATCHED_FAMILY="Sarasa${FILE_KIND}${LOCALE} Nerd Font Mono"
   TTC_NAME="${FILE_STEM}.ttc"
-  CASK_TOKEN="font-sarasa-term-${LOCALE_SLUG}-nerd"
-  CASK_NAME="Sarasa Term $LOCALE Nerd Font Mono"
-  CASK_DESC="Sarasa Term $LOCALE in five weights patched with Nerd Fonts (CJK 2:1 width preserved)"
+  CASK_TOKEN="font-sarasa-${CASK_KIND}-${LOCALE_SLUG}-nerd"
+  CASK_NAME="Sarasa $FAMILY_LABEL $LOCALE Nerd Font Mono"
+  CASK_DESC="Sarasa $FAMILY_LABEL $LOCALE in five weights patched with Nerd Fonts (CJK 2:1 width preserved)"
 }
 
 # Sarasa ships five weights, each with upright and italic faces. Regular has no

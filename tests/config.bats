@@ -2,9 +2,25 @@
 setup() { source "${BATS_TEST_DIRNAME}/../config.sh"; }
 
 @test "supported variants expose all ten upstream faces" {
-  [ "${VARIANTS[*]}" = "term-sc term-tc term-j term-k term-hc term-cl" ]
+  [ "${VARIANTS[*]}" = "term-sc term-tc term-j term-k term-hc term-cl term-slab-sc term-slab-tc" ]
   [ "${#FACES[@]}" -eq 10 ]
   [ "${FACES[*]}" = "XLight XLightItalic Light LightItalic Regular Italic SemiBold SemiBoldItalic Bold BoldItalic" ]
+}
+
+@test "Term Slab SC and TC derive distinct source, output, and cask names" {
+  select_variant term-slab-sc
+  [ "$SUBFONT_BASE" = "Sarasa Term Slab SC" ]
+  [ "$SOURCE_STEM" = "SarasaTermSlabSC" ]
+  [ "$FILE_STEM" = "SarasaTermSlabSCNerdFontMono" ]
+  [ "$PATCHED_FAMILY" = "SarasaTermSlabSC Nerd Font Mono" ]
+  [ "$CASK_TOKEN" = "font-sarasa-term-slab-sc-nerd" ]
+  [ "$(face_subfont BoldItalic)" = "Sarasa Term Slab SC Bold Italic" ]
+
+  select_variant term-slab-tc
+  [ "$SUBFONT_BASE" = "Sarasa Term Slab TC" ]
+  [ "$SOURCE_STEM" = "SarasaTermSlabTC" ]
+  [ "$FILE_STEM" = "SarasaTermSlabTCNerdFontMono" ]
+  [ "$CASK_TOKEN" = "font-sarasa-term-slab-tc-nerd" ]
 }
 
 @test "Term HC and CL derive their source, output, and cask names" {
@@ -43,6 +59,7 @@ setup() { source "${BATS_TEST_DIRNAME}/../config.sh"; }
   select_variant term-tc
   [ "$SUBFONT_BASE" = "Sarasa Term TC" ]
   [ "$FILE_STEM" = "SarasaTermTCNerdFontMono" ]
+  [ "$SOURCE_STEM" = "SarasaTermTC" ]
   [ "$PATCHED_FAMILY" = "SarasaTermTC Nerd Font Mono" ]
   [ "$CASK_TOKEN" = "font-sarasa-term-tc-nerd" ]
   [ "$(face_subfont XLightItalic)" = "Sarasa Term TC XLight Italic" ]
