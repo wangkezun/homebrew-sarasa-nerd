@@ -8,7 +8,7 @@ and uses an **enlarged icon size** (`--cell 0:540`). Auto-rebuilt whenever
 
 ```bash
 brew tap wangkezun/sarasa-nerd
-brew trust wangkezun/sarasa-nerd        # newer Homebrew requires trusting third-party casks
+brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-sc-nerd
 brew install --cask font-sarasa-term-sc-nerd
 ```
 
