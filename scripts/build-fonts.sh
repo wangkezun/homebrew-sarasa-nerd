@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# scripts/build-fonts.sh <upstream_version_tag>
-# Produces dist/SarasaTermSCNerdFontMono-<Face>.ttf (10) and dist/SarasaTermSCNerdFontMono.ttc
+# scripts/build-fonts.sh <upstream_version_tag> [term-sc|term-tc]
+# Produces ten TTF faces and one TTC under dist/<variant>/.
 set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$DIR/config.sh"
 VERSION="$1"
-WORK="$DIR/work"; DIST="$DIR/dist"; FP="$DIR/fontpatcher"
+VARIANT="${2:-term-sc}"
+select_variant "$VARIANT"
+WORK="$DIR/work/$VARIANT"; DIST="$DIR/dist/$VARIANT"; FP="$DIR/fontpatcher"
 if [ -n "${SARASA_TTC:-}" ]; then
   [ -f "$SARASA_TTC" ] || { echo "SARASA_TTC not found: $SARASA_TTC" >&2; exit 1; }
   SARASA_TTC="$(cd "$(dirname "$SARASA_TTC")" && pwd)/$(basename "$SARASA_TTC")"
@@ -47,7 +49,7 @@ python3 "$DIR/scripts/make-md-subset.py" \
 # 4. extract + patch each face
 for face in "${FACES[@]}"; do
   sub="$(face_subfont "$face")"
-  raw="$WORK/SarasaTermSC-$face.ttf"
+  raw="$WORK/SarasaTerm${LOCALE}-$face.ttf"
   fontforge -lang=py -c 'import fontforge,sys; g=fontforge.open(sys.argv[1]); g.generate(sys.argv[2]); g.close()' \
     "${TTC_SRC}(${sub})" "$raw" 2>/dev/null
   rm -rf "$WORK/patched"; mkdir -p "$WORK/patched"
@@ -55,7 +57,7 @@ for face in "${FACES[@]}"; do
     -out "$WORK/patched" "$raw" >/dev/null 2>&1
   out="$(find "$WORK/patched" -iname '*.ttf' | head -1)"
   [ -n "$out" ] || { echo "patch produced no file for $face" >&2; exit 1; }
-  mv "$out" "$DIST/SarasaTermSCNerdFontMono-$face.ttf"
+  mv "$out" "$DIST/${FILE_STEM}-$face.ttf"
 done
 
 # 4b. Normalize the family/style names, retain the real weight class, and restore
@@ -66,7 +68,7 @@ done
 for face in "${FACES[@]}"; do
   style="$(face_style "$face")"
   weight="$(face_weight "$face")"
-  python3 - "$DIST/SarasaTermSCNerdFontMono-$face.ttf" "$PATCHED_FAMILY" "$style" "$weight" <<'PY'
+  python3 - "$DIST/${FILE_STEM}-$face.ttf" "$PATCHED_FAMILY" "$style" "$weight" <<'PY'
 import sys
 from fontTools.ttLib import TTFont
 f = TTFont(sys.argv[1])
@@ -97,7 +99,7 @@ done
 # 5. merge into a single TTC (fonttools dedups identical tables)
 face_paths=()
 for face in "${FACES[@]}"; do
-  face_paths+=("$DIST/SarasaTermSCNerdFontMono-$face.ttf")
+  face_paths+=("$DIST/${FILE_STEM}-$face.ttf")
 done
 python3 - "$DIST/$TTC_NAME" "${face_paths[@]}" <<'PY'
 import sys
