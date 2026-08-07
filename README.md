@@ -77,6 +77,20 @@ brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-slab-k-nerd
 brew install --cask font-sarasa-term-slab-k-nerd
 ```
 
+Term Slab Hong Kong regional orthography (HC):
+
+```bash
+brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-slab-hc-nerd
+brew install --cask font-sarasa-term-slab-hc-nerd
+```
+
+Term Slab Classical orthography (CL):
+
+```bash
+brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-slab-cl-nerd
+brew install --cask font-sarasa-term-slab-cl-nerd
+```
+
 Then set your terminal font to **`SarasaTermSC Nerd Font Mono`** or
 the corresponding Term/Term Slab family. Updates arrive via `brew upgrade`.
 
@@ -86,7 +100,8 @@ the corresponding Term/Term Slab family. Updates arrive via `brew upgrade`.
   `SarasaTermJ Nerd Font Mono`, `SarasaTermK Nerd Font Mono`,
   `SarasaTermHC Nerd Font Mono`, `SarasaTermCL Nerd Font Mono`,
   `SarasaTermSlabSC Nerd Font Mono`, `SarasaTermSlabTC Nerd Font Mono`,
-  `SarasaTermSlabJ Nerd Font Mono`, and `SarasaTermSlabK Nerd Font Mono`. Each has five
+  `SarasaTermSlabJ Nerd Font Mono`, `SarasaTermSlabK Nerd Font Mono`,
+  `SarasaTermSlabHC Nerd Font Mono`, and `SarasaTermSlabCL Nerd Font Mono`. Each has five
   weights from ExtraLight through Bold in upright and italic styles (10 faces per TTC).
 - Patched with nerd-fonts font-patcher: `--single-width-glyphs --makegroups 1 --cell 0:540:-285:965`
   plus all icon sets, including a **trimmed Material Design** subset. The full ~6880-glyph Material

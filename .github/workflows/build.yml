@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [term-sc, term-tc, term-j, term-k, term-hc, term-cl, term-slab-sc, term-slab-tc, term-slab-j, term-slab-k]
+        variant: [term-sc, term-tc, term-j, term-k, term-hc, term-cl, term-slab-sc, term-slab-tc, term-slab-j, term-slab-k, term-slab-hc, term-slab-cl]
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       VERSION: ${{ needs.check.outputs.version }}

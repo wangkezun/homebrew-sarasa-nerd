@@ -7,6 +7,7 @@ THIS_REPO="wangkezun/homebrew-sarasa-nerd"
 VARIANTS=(
   "term-sc" "term-tc" "term-j" "term-k" "term-hc" "term-cl"
   "term-slab-sc" "term-slab-tc" "term-slab-j" "term-slab-k"
+  "term-slab-hc" "term-slab-cl"
 )
 select_variant() {
   FONT_VARIANT="$1"
@@ -37,6 +38,14 @@ select_variant() {
       ;;
     term-slab-k)
       LOCALE="K"; LOCALE_SLUG="k"
+      FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
+      ;;
+    term-slab-hc)
+      LOCALE="HC"; LOCALE_SLUG="hc"
+      FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
+      ;;
+    term-slab-cl)
+      LOCALE="CL"; LOCALE_SLUG="cl"
       FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
       ;;
     *) echo "unknown variant: $FONT_VARIANT" >&2; return 1 ;;
