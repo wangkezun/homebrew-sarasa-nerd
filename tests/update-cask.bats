@@ -19,3 +19,15 @@ setup() { source "${BATS_TEST_DIRNAME}/../scripts/update-cask.sh"; }
   [[ "$output" == *'name "Sarasa Term TC Nerd Font Mono"'* ]]
   [[ "$output" == *'font "SarasaTermTCNerdFontMono.ttc"'* ]]
 }
+
+@test "render_cask supports Term J and K" {
+  run render_cask term-j "v1.0.40" "deadbeef" "https://example.com/j.ttc"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *'cask "font-sarasa-term-j-nerd"'* ]]
+  [[ "$output" == *'font "SarasaTermJNerdFontMono.ttc"'* ]]
+
+  run render_cask term-k "v1.0.40" "cafebabe" "https://example.com/k.ttc"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *'cask "font-sarasa-term-k-nerd"'* ]]
+  [[ "$output" == *'font "SarasaTermKNerdFontMono.ttc"'* ]]
+}

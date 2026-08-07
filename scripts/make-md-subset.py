@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# scripts/make-md-subset.py <MaterialDesignIconsDesktop.ttf> <glyphnames.json> <whitelist.txt> <out.ttf>
+# scripts/make-md-subset.py <MaterialDesignIconsDesktop.ttf> <glyphnames.json> <whitelist.txt> <out.ttf> [max_keep]
 #
 # Material Design Icons (nf-md-*, ~6880 glyphs) cannot be patched in whole: with
 # Sarasa Term SC's full CJK base the font would exceed the sfnt 65535-glyph limit.
@@ -14,7 +14,7 @@ import sys
 from fontTools import subset
 
 MD_LO, MD_HI = 0xF0001, 0xF1AF0          # Material Design PUA range
-MAX_KEEP = 5100                          # safety cap below the ~5206 headroom
+DEFAULT_MAX_KEEP = 5100                  # safety cap below the SC/TC/K headroom
 
 # Buckets dropped to get under the limit. Order of magnitude: ~1950 glyphs.
 DROP = [
@@ -29,6 +29,7 @@ DROP_RE = [re.compile(p) for p in DROP]
 
 def main():
     src, glyphnames, whitelist_path, out = sys.argv[1:5]
+    max_keep = int(sys.argv[5]) if len(sys.argv) > 5 else DEFAULT_MAX_KEEP
 
     db = json.load(open(glyphnames))
     md = {int(v["code"], 16): k[3:]
@@ -48,10 +49,21 @@ def main():
     dropped = raw_dropped - whitelist
     keep = (set(md) - dropped)
 
+    # Some locale bases (notably J) leave less room below the sfnt glyph limit.
+    # Keep lower codepoints first for a stable, reproducible subset, while always
+    # retaining every icon explicitly required by eza/lsd.
+    if len(keep) > max_keep:
+        required = keep & whitelist
+        slots = max_keep - len(required)
+        if slots < 0:
+            sys.exit("whitelist count %d exceeds max_keep %d" % (len(required), max_keep))
+        optional = sorted(keep - required)
+        keep = required | set(optional[:slots])
+
     print("MD total: %d  dropped: %d  whitelist rescued: %d  -> keep: %d"
           % (len(md), len(dropped), len(rescued), len(keep)))
-    if len(keep) > MAX_KEEP:
-        sys.exit("keep count %d exceeds safety cap %d" % (len(keep), MAX_KEEP))
+    if len(keep) > max_keep:
+        sys.exit("keep count %d exceeds safety cap %d" % (len(keep), max_keep))
 
     opt = subset.Options()
     opt.glyph_names = True          # font-patcher --custom keys glyphs by name
