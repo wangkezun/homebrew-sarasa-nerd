@@ -23,7 +23,7 @@ jobs:
       build_needed: ${{ steps.c.outputs.build_needed }}
       version: ${{ steps.c.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: c
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,11 +33,16 @@ jobs:
     needs: check
     if: needs.check.outputs.build_needed == 'true' || github.event.inputs.force == 'true'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [term-sc, term-tc]
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       VERSION: ${{ needs.check.outputs.version }}
+      VARIANT: ${{ matrix.variant }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install deps
         run: |
@@ -46,29 +51,61 @@ jobs:
           pip3 install --quiet fonttools
 
       - name: Build fonts
-        run: bash scripts/build-fonts.sh "$VERSION"
+        run: bash scripts/build-fonts.sh "$VERSION" "$VARIANT"
 
       - name: Verify fonts
-        run: for f in dist/*.ttf dist/*.ttc; do bash scripts/verify-fonts.sh "$f"; done
+        run: for f in "dist/$VARIANT"/*.ttf "dist/$VARIANT"/*.ttc; do bash scripts/verify-fonts.sh "$f" "$VARIANT"; done
 
       - name: Package TTFs
-        run: (cd dist && zip -q SarasaTermSCNerdFontMono-TTF.zip SarasaTermSCNerdFontMono-*.ttf)
+        run: |
+          source config.sh
+          select_variant "$VARIANT"
+          (cd "dist/$VARIANT" && zip -q "${FILE_STEM}-TTF.zip" "${FILE_STEM}-"*.ttf)
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: font-${{ matrix.variant }}
+          path: |
+            dist/${{ matrix.variant }}/*.ttc
+            dist/${{ matrix.variant }}/*-TTF.zip
+          if-no-files-found: error
+
+  publish:
+    needs: [check, build]
+    if: needs.check.outputs.build_needed == 'true' || github.event.inputs.force == 'true'
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      VERSION: ${{ needs.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
 
       - name: Create / update release
         run: |
-          gh release create "$VERSION" \
-            dist/SarasaTermSCNerdFontMono.ttc \
-            dist/SarasaTermSCNerdFontMono-TTF.zip \
-            --title "$VERSION" --notes "Auto-built from be5invis/Sarasa-Gothic $VERSION" \
-          || gh release upload "$VERSION" \
-            dist/SarasaTermSCNerdFontMono.ttc \
-            dist/SarasaTermSCNerdFontMono-TTF.zip --clobber
+          assets=(dist/*.ttc dist/*-TTF.zip)
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            gh release upload "$VERSION" "${assets[@]}" --clobber
+          else
+            gh release create "$VERSION" "${assets[@]}" \
+              --title "$VERSION" --notes "Auto-built from be5invis/Sarasa-Gothic $VERSION"
+          fi
 
-      - name: Update cask
+      - name: Update casks
         run: |
-          SHA=$(shasum -a 256 dist/SarasaTermSCNerdFontMono.ttc | awk '{print $1}')
-          URL="https://github.com/${{ github.repository }}/releases/download/${VERSION}/SarasaTermSCNerdFontMono.ttc"
-          bash scripts/update-cask.sh "$VERSION" "$SHA" "$URL"
+          source config.sh
+          for variant in "${VARIANTS[@]}"; do
+            select_variant "$variant"
+            SHA=$(shasum -a 256 "dist/$TTC_NAME" | awk '{print $1}')
+            URL="https://github.com/${{ github.repository }}/releases/download/${VERSION}/${TTC_NAME}"
+            bash scripts/update-cask.sh "$variant" "$VERSION" "$SHA" "$URL"
+          done
 
       - name: Commit cask + version
         run: |

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/verify-fonts.sh <font.ttf|font.ttc>
+# scripts/verify-fonts.sh <font.ttf|font.ttc> [term-sc|term-tc]
 # Asserts: Latin A=500, CJK 你=1000, glyphs<65535, family name, key icons present,
 # correct weight/style metadata, and post.isFixedPitch=1 (CoreText monospace trait).
 # For a .ttc, all ten expected faces must be present.
@@ -8,6 +8,8 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$DIR/config.sh"
 
 FONT="$1"
+VARIANT="${2:-term-sc}"
+select_variant "$VARIANT"
 fontforge -lang=py -c '
 import fontforge, sys
 path = sys.argv[1]

@@ -2,10 +2,28 @@
 UPSTREAM_REPO="be5invis/Sarasa-Gothic"
 THIS_REPO="wangkezun/homebrew-sarasa-nerd"
 
-# Subfont name (in SuperTTC) -> clean output face label.  Sarasa ships five
-# weights, each with upright and italic faces.  Regular has no weight suffix in
-# the SuperTTC subfont name.
-SUBFONT_BASE="Sarasa Term SC"
+# Supported font family/locale variants. select_variant sets all derived names
+# used by the build, verification, cask, and release scripts.
+VARIANTS=("term-sc" "term-tc")
+select_variant() {
+  FONT_VARIANT="$1"
+  case "$FONT_VARIANT" in
+    term-sc) LOCALE="SC"; LOCALE_SLUG="sc" ;;
+    term-tc) LOCALE="TC"; LOCALE_SLUG="tc" ;;
+    *) echo "unknown variant: $FONT_VARIANT" >&2; return 1 ;;
+  esac
+
+  SUBFONT_BASE="Sarasa Term $LOCALE"
+  FILE_STEM="SarasaTerm${LOCALE}NerdFontMono"
+  PATCHED_FAMILY="SarasaTerm${LOCALE} Nerd Font Mono"
+  TTC_NAME="${FILE_STEM}.ttc"
+  CASK_TOKEN="font-sarasa-term-${LOCALE_SLUG}-nerd"
+  CASK_NAME="Sarasa Term $LOCALE Nerd Font Mono"
+  CASK_DESC="Sarasa Term $LOCALE in five weights patched with Nerd Fonts (CJK 2:1 width preserved)"
+}
+
+# Sarasa ships five weights, each with upright and italic faces. Regular has no
+# weight suffix in the SuperTTC subfont name.
 FACES=(
   "XLight" "XLightItalic"
   "Light" "LightItalic"
@@ -56,10 +74,6 @@ face_weight() {               # $1 = face label -> OS/2 usWeightClass
   esac
 }
 
-PATCHED_FAMILY="SarasaTermSC Nerd Font Mono"
-TTC_NAME="SarasaTermSCNerdFontMono.ttc"
-CASK_TOKEN="font-sarasa-term-sc-nerd"
-
 FONTPATCHER_VERSION="v3.4.0"
 FONTPATCHER_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${FONTPATCHER_VERSION}/FontPatcher.zip"
 
@@ -74,3 +88,6 @@ MD_GLYPH_SRC="src/glyphs/materialdesign/MaterialDesignIconsDesktop.ttf"  # relat
 MD_WHITELIST="scripts/eza-lsd-md-icons.txt"                              # relative to repo root
 
 GLYPH_LIMIT=65535
+
+# Preserve the original Term SC behavior for callers that only source config.sh.
+select_variant "${FONT_VARIANT:-term-sc}"

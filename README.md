@@ -1,6 +1,6 @@
-# Sarasa Term SC Nerd Font (auto-built tap)
+# Sarasa Term Nerd Fonts (auto-built tap)
 
-Nerd Fonts–patched **Sarasa Term SC** that keeps Sarasa's strict **2:1 CJK-to-Latin width**
+Nerd Fonts–patched **Sarasa Term SC and TC** that keep Sarasa's strict **2:1 CJK-to-Latin width**
 and uses an **enlarged icon size** (`--cell 0:540`). Auto-rebuilt whenever
 [be5invis/Sarasa-Gothic](https://github.com/be5invis/Sarasa-Gothic) ships a release.
 
@@ -12,12 +12,20 @@ brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-sc-nerd
 brew install --cask font-sarasa-term-sc-nerd
 ```
 
-Then set your terminal font to **`SarasaTermSC Nerd Font Mono`**. Updates arrive via `brew upgrade`.
+Traditional Chinese (TC):
+
+```bash
+brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-tc-nerd
+brew install --cask font-sarasa-term-tc-nerd
+```
+
+Then set your terminal font to **`SarasaTermSC Nerd Font Mono`** or
+**`SarasaTermTC Nerd Font Mono`**. Updates arrive via `brew upgrade`.
 
 ## What's inside
 
-- Family: `SarasaTermSC Nerd Font Mono`, five weights from ExtraLight through Bold,
-  each in upright and italic styles (10 faces in one TTC).
+- Families: `SarasaTermSC Nerd Font Mono` and `SarasaTermTC Nerd Font Mono`. Each has five
+  weights from ExtraLight through Bold in upright and italic styles (10 faces per TTC).
 - Patched with nerd-fonts font-patcher: `--single-width-glyphs --makegroups 1 --cell 0:540:-285:965`
   plus all icon sets, including a **trimmed Material Design** subset. The full ~6880-glyph Material
   Design set would push the CJK base over the 65535 sfnt limit, so it's trimmed to ~4900 glyphs
@@ -26,9 +34,10 @@ Then set your terminal font to **`SarasaTermSC Nerd Font Mono`**. Updates arrive
 
 ## How it updates
 
-A daily GitHub Actions workflow checks the upstream latest release, and on a new version:
-rebuilds the fonts, verifies them (CJK width, glyph count, family name, icons), publishes a
-GitHub Release, and rewrites the cask — so `brew update && brew upgrade` tracks upstream automatically.
+A daily GitHub Actions workflow checks the upstream latest release, then builds and verifies SC and
+TC in parallel (CJK width, glyph count, family name, icons). A single publish job uploads both
+families to one GitHub Release and rewrites both casks, so `brew update && brew upgrade` tracks
+upstream automatically.
 
 ## Licensing
 
