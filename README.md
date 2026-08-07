@@ -16,7 +16,8 @@ Then set your terminal font to **`SarasaTermSC Nerd Font Mono`**. Updates arrive
 
 ## What's inside
 
-- Family: `SarasaTermSC Nerd Font Mono`, weights Regular/Bold/Italic/BoldItalic (one TTC).
+- Family: `SarasaTermSC Nerd Font Mono`, five weights from ExtraLight through Bold,
+  each in upright and italic styles (10 faces in one TTC).
 - Patched with nerd-fonts font-patcher: `--single-width-glyphs --makegroups 1 --cell 0:540:-285:965`
   plus all icon sets, including a **trimmed Material Design** subset. The full ~6880-glyph Material
   Design set would push the CJK base over the 65535 sfnt limit, so it's trimmed to ~4900 glyphs

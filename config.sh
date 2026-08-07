@@ -2,16 +2,57 @@
 UPSTREAM_REPO="be5invis/Sarasa-Gothic"
 THIS_REPO="wangkezun/homebrew-sarasa-term-sc-nerd"
 
-# Subfont name (in SuperTTC)  ->  clean output weight label
-# Regular has no suffix in the SuperTTC subfont name.
+# Subfont name (in SuperTTC) -> clean output face label.  Sarasa ships five
+# weights, each with upright and italic faces.  Regular has no weight suffix in
+# the SuperTTC subfont name.
 SUBFONT_BASE="Sarasa Term SC"
-WEIGHTS=("Regular" "Bold" "Italic" "BoldItalic")
-weight_subfont() {            # $1 = weight label -> exact SuperTTC subfont name
+FACES=(
+  "XLight" "XLightItalic"
+  "Light" "LightItalic"
+  "Regular" "Italic"
+  "SemiBold" "SemiBoldItalic"
+  "Bold" "BoldItalic"
+)
+face_subfont() {              # $1 = face label -> exact SuperTTC subfont name
   case "$1" in
-    Regular)    echo "$SUBFONT_BASE" ;;
-    Bold)       echo "$SUBFONT_BASE Bold" ;;
-    Italic)     echo "$SUBFONT_BASE Italic" ;;
-    BoldItalic) echo "$SUBFONT_BASE Bold Italic" ;;
+    Regular)         echo "$SUBFONT_BASE" ;;
+    Italic)          echo "$SUBFONT_BASE Italic" ;;
+    XLight)          echo "$SUBFONT_BASE XLight" ;;
+    XLightItalic)    echo "$SUBFONT_BASE XLight Italic" ;;
+    Light)           echo "$SUBFONT_BASE Light" ;;
+    LightItalic)     echo "$SUBFONT_BASE Light Italic" ;;
+    SemiBold)        echo "$SUBFONT_BASE SemiBold" ;;
+    SemiBoldItalic)  echo "$SUBFONT_BASE SemiBold Italic" ;;
+    Bold)            echo "$SUBFONT_BASE Bold" ;;
+    BoldItalic)      echo "$SUBFONT_BASE Bold Italic" ;;
+    *) echo "unknown face: $1" >&2; return 1 ;;
+  esac
+}
+
+face_style() {                # $1 = face label -> OpenType typographic subfamily
+  case "$1" in
+    XLight)         echo "ExtraLight" ;;
+    XLightItalic)   echo "ExtraLight Italic" ;;
+    Light)          echo "Light" ;;
+    LightItalic)    echo "Light Italic" ;;
+    Regular)        echo "Regular" ;;
+    Italic)         echo "Italic" ;;
+    SemiBold)       echo "SemiBold" ;;
+    SemiBoldItalic) echo "SemiBold Italic" ;;
+    Bold)           echo "Bold" ;;
+    BoldItalic)     echo "Bold Italic" ;;
+    *) echo "unknown face: $1" >&2; return 1 ;;
+  esac
+}
+
+face_weight() {               # $1 = face label -> OS/2 usWeightClass
+  case "$1" in
+    XLight|XLightItalic)     echo 200 ;;
+    Light|LightItalic)       echo 300 ;;
+    Regular|Italic)          echo 400 ;;
+    SemiBold|SemiBoldItalic) echo 600 ;;
+    Bold|BoldItalic)         echo 700 ;;
+    *) echo "unknown face: $1" >&2; return 1 ;;
   esac
 }
 

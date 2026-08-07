@@ -13,7 +13,9 @@ valid_tag() {     # exit 0 if $1 is a safe tag (no chars that could inject into 
 main() {
   local dir; dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
   local latest current
-  latest="$(curl -fsSL -H "Authorization: Bearer ${GITHUB_TOKEN:-}" \
+  local -a github_headers=()
+  [ -z "${GITHUB_TOKEN:-}" ] || github_headers=(-H "Authorization: Bearer $GITHUB_TOKEN")
+  latest="$(curl -fsSL "${github_headers[@]}" \
       "https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest" | jq -r .tag_name)"
   current="$(cat "$dir/version.txt" 2>/dev/null || echo "none")"
   # A non-empty tag that isn't a clean token is suspicious — refuse rather than echo it into $GITHUB_OUTPUT.
