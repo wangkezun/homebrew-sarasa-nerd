@@ -69,3 +69,16 @@ setup() { source "${BATS_TEST_DIRNAME}/../scripts/update-cask.sh"; }
   [[ "$output" == *'cask "font-sarasa-term-slab-k-nerd"'* ]]
   [[ "$output" == *'font "SarasaTermSlabKNerdFontMono.ttc"'* ]]
 }
+
+@test "render_cask supports Term Slab HC and CL" {
+  run render_cask term-slab-hc "v1.0.40" "deadbeef" "https://example.com/slab-hc.ttc"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *'cask "font-sarasa-term-slab-hc-nerd"'* ]]
+  [[ "$output" == *'name "Sarasa Term Slab HC Nerd Font Mono"'* ]]
+  [[ "$output" == *'font "SarasaTermSlabHCNerdFontMono.ttc"'* ]]
+
+  run render_cask term-slab-cl "v1.0.40" "cafebabe" "https://example.com/slab-cl.ttc"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *'cask "font-sarasa-term-slab-cl-nerd"'* ]]
+  [[ "$output" == *'font "SarasaTermSlabCLNerdFontMono.ttc"'* ]]
+}
