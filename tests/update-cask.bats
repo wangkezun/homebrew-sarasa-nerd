@@ -31,3 +31,15 @@ setup() { source "${BATS_TEST_DIRNAME}/../scripts/update-cask.sh"; }
   [[ "$output" == *'cask "font-sarasa-term-k-nerd"'* ]]
   [[ "$output" == *'font "SarasaTermKNerdFontMono.ttc"'* ]]
 }
+
+@test "render_cask supports Term HC and CL" {
+  run render_cask term-hc "v1.0.40" "deadbeef" "https://example.com/hc.ttc"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *'cask "font-sarasa-term-hc-nerd"'* ]]
+  [[ "$output" == *'font "SarasaTermHCNerdFontMono.ttc"'* ]]
+
+  run render_cask term-cl "v1.0.40" "cafebabe" "https://example.com/cl.ttc"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *'cask "font-sarasa-term-cl-nerd"'* ]]
+  [[ "$output" == *'font "SarasaTermCLNerdFontMono.ttc"'* ]]
+}

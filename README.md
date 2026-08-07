@@ -1,7 +1,7 @@
 # Sarasa Term Nerd Fonts (auto-built tap)
 
-Nerd Fonts–patched **Sarasa Term SC, TC, J, and K** that keep Sarasa's strict **2:1 CJK-to-Latin width**
-and uses an **enlarged icon size** (`--cell 0:540`). Auto-rebuilt whenever
+Nerd Fonts–patched **Sarasa Term SC, TC, J, K, HC, and CL** that keep Sarasa's strict **2:1 CJK-to-Latin width**
+and use an **enlarged icon size** (`--cell 0:540`). Auto-rebuilt whenever
 [be5invis/Sarasa-Gothic](https://github.com/be5invis/Sarasa-Gothic) ships a release.
 
 ## Install
@@ -33,13 +33,28 @@ brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-k-nerd
 brew install --cask font-sarasa-term-k-nerd
 ```
 
+Hong Kong regional orthography (HC):
+
+```bash
+brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-hc-nerd
+brew install --cask font-sarasa-term-hc-nerd
+```
+
+Classical orthography (CL):
+
+```bash
+brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-cl-nerd
+brew install --cask font-sarasa-term-cl-nerd
+```
+
 Then set your terminal font to **`SarasaTermSC Nerd Font Mono`** or
-the corresponding TC, J, or K family. Updates arrive via `brew upgrade`.
+the corresponding TC, J, K, HC, or CL family. Updates arrive via `brew upgrade`.
 
 ## What's inside
 
 - Families: `SarasaTermSC Nerd Font Mono`, `SarasaTermTC Nerd Font Mono`,
-  `SarasaTermJ Nerd Font Mono`, and `SarasaTermK Nerd Font Mono`. Each has five
+  `SarasaTermJ Nerd Font Mono`, `SarasaTermK Nerd Font Mono`,
+  `SarasaTermHC Nerd Font Mono`, and `SarasaTermCL Nerd Font Mono`. Each has five
   weights from ExtraLight through Bold in upright and italic styles (10 faces per TTC).
 - Patched with nerd-fonts font-patcher: `--single-width-glyphs --makegroups 1 --cell 0:540:-285:965`
   plus all icon sets, including a **trimmed Material Design** subset. The full ~6880-glyph Material
