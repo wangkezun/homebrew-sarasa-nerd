@@ -1,10 +1,12 @@
-# Sarasa Term Nerd Fonts (auto-built tap)
+# Sarasa Term and Term Slab Nerd Fonts (auto-built tap)
 
-Nerd Fonts–patched **Sarasa Term SC, TC, J, K, HC, and CL** that keep Sarasa's strict **2:1 CJK-to-Latin width**
+Nerd Fonts–patched **Sarasa Term** and **Sarasa Term Slab** families that keep Sarasa's strict **2:1 CJK-to-Latin width**
 and use an **enlarged icon size** (`--cell 0:540`). Auto-rebuilt whenever
 [be5invis/Sarasa-Gothic](https://github.com/be5invis/Sarasa-Gothic) ships a release.
 
 ## Install
+
+Term SC:
 
 ```bash
 brew tap wangkezun/sarasa-nerd
@@ -47,14 +49,29 @@ brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-cl-nerd
 brew install --cask font-sarasa-term-cl-nerd
 ```
 
+Term Slab SC:
+
+```bash
+brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-slab-sc-nerd
+brew install --cask font-sarasa-term-slab-sc-nerd
+```
+
+Term Slab TC:
+
+```bash
+brew trust --cask wangkezun/sarasa-nerd/font-sarasa-term-slab-tc-nerd
+brew install --cask font-sarasa-term-slab-tc-nerd
+```
+
 Then set your terminal font to **`SarasaTermSC Nerd Font Mono`** or
-the corresponding TC, J, K, HC, or CL family. Updates arrive via `brew upgrade`.
+the corresponding Term/Term Slab family. Updates arrive via `brew upgrade`.
 
 ## What's inside
 
 - Families: `SarasaTermSC Nerd Font Mono`, `SarasaTermTC Nerd Font Mono`,
   `SarasaTermJ Nerd Font Mono`, `SarasaTermK Nerd Font Mono`,
-  `SarasaTermHC Nerd Font Mono`, and `SarasaTermCL Nerd Font Mono`. Each has five
+  `SarasaTermHC Nerd Font Mono`, `SarasaTermCL Nerd Font Mono`,
+  `SarasaTermSlabSC Nerd Font Mono`, and `SarasaTermSlabTC Nerd Font Mono`. Each has five
   weights from ExtraLight through Bold in upright and italic styles (10 faces per TTC).
 - Patched with nerd-fonts font-patcher: `--single-width-glyphs --makegroups 1 --cell 0:540:-285:965`
   plus all icon sets, including a **trimmed Material Design** subset. The full ~6880-glyph Material
@@ -66,7 +83,7 @@ the corresponding TC, J, K, HC, or CL family. Updates arrive via `brew upgrade`.
 ## How it updates
 
 A daily GitHub Actions workflow checks the upstream latest release, then builds and verifies every
-locale in parallel (CJK width, glyph count, family name, icons). A single publish job uploads all
+variant in parallel (CJK width, glyph count, family name, icons). A single publish job uploads all
 families to one GitHub Release and rewrites their casks, so `brew update && brew upgrade` tracks
 upstream automatically.
 

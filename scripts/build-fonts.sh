@@ -49,7 +49,7 @@ python3 "$DIR/scripts/make-md-subset.py" \
 # 4. extract + patch each face
 for face in "${FACES[@]}"; do
   sub="$(face_subfont "$face")"
-  raw="$WORK/SarasaTerm${LOCALE}-$face.ttf"
+  raw="$WORK/${SOURCE_STEM}-$face.ttf"
   fontforge -lang=py -c 'import fontforge,sys; g=fontforge.open(sys.argv[1]); g.generate(sys.argv[2]); g.close()' \
     "${TTC_SRC}(${sub})" "$raw" 2>/dev/null
   rm -rf "$WORK/patched"; mkdir -p "$WORK/patched"
