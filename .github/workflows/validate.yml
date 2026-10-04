@@ -1,0 +1,82 @@
+name: validate
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.upstream.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats jq
+
+      - name: Check shell syntax and unit tests
+        run: |
+          for script in config.sh scripts/*.sh; do bash -n "$script"; done
+          bats tests
+
+      - name: Select upstream version
+        id: upstream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/check-upstream.sh >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [term-sc, term-tc, term-j, term-k, term-hc, term-cl, term-slab-sc, term-slab-tc, term-slab-j, term-slab-k, term-slab-hc, term-slab-cl]
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      VERSION: ${{ needs.check.outputs.version }}
+      VARIANT: ${{ matrix.variant }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fontforge jq unzip zip
+          pip3 install --quiet fonttools
+
+      - name: Build fonts
+        run: bash scripts/build-fonts.sh "$VERSION" "$VARIANT"
+
+      - name: Verify fonts
+        run: for f in "dist/$VARIANT"/*.ttf "dist/$VARIANT"/*.ttc; do bash scripts/verify-fonts.sh "$f" "$VARIANT"; done
+
+      - name: Package TTFs
+        run: |
+          source config.sh
+          select_variant "$VARIANT"
+          (cd "dist/$VARIANT" && zip -q "${FILE_STEM}-TTF.zip" "${FILE_STEM}-"*.ttf)
+
+      - name: Preserve failure logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: logs-${{ matrix.variant }}
+          path: work/${{ matrix.variant }}/*.log
+          if-no-files-found: ignore
+          retention-days: 7

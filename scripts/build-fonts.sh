@@ -50,11 +50,27 @@ python3 "$DIR/scripts/make-md-subset.py" \
 for face in "${FACES[@]}"; do
   sub="$(face_subfont "$face")"
   raw="$WORK/${SOURCE_STEM}-$face.ttf"
-  fontforge -lang=py -c 'import fontforge,sys; g=fontforge.open(sys.argv[1]); g.generate(sys.argv[2]); g.close()' \
-    "${TTC_SRC}(${sub})" "$raw" 2>/dev/null
+  echo "[$VARIANT/$face] extracting $sub"
+  if fontforge -lang=py -c 'import fontforge,sys; g=fontforge.open(sys.argv[1]); g.generate(sys.argv[2]); g.close()' \
+    "${TTC_SRC}(${sub})" "$raw" >"$WORK/$face-extract.log" 2>&1; then
+    :
+  else
+    status=$?
+    echo "[$VARIANT/$face] FontForge extraction failed (exit $status)" >&2
+    cat "$WORK/$face-extract.log" >&2
+    exit "$status"
+  fi
   rm -rf "$WORK/patched"; mkdir -p "$WORK/patched"
-  fontforge -script "$FP/font-patcher" "${PATCH_FLAGS[@]}" "${GLYPH_SETS[@]}" --custom "$MD_SUBSET" \
-    -out "$WORK/patched" "$raw" >/dev/null 2>&1
+  echo "[$VARIANT/$face] patching with MD cap $MD_MAX_KEEP"
+  if fontforge -script "$FP/font-patcher" "${PATCH_FLAGS[@]}" "${GLYPH_SETS[@]}" --custom "$MD_SUBSET" \
+    -out "$WORK/patched" "$raw" >"$WORK/$face-patch.log" 2>&1; then
+    :
+  else
+    status=$?
+    echo "[$VARIANT/$face] font-patcher failed (exit $status)" >&2
+    cat "$WORK/$face-patch.log" >&2
+    exit "$status"
+  fi
   out="$(find "$WORK/patched" -iname '*.ttf' | head -1)"
   [ -n "$out" ] || { echo "patch produced no file for $face" >&2; exit 1; }
   mv "$out" "$DIST/${FILE_STEM}-$face.ttf"
