@@ -119,3 +119,10 @@ setup() { source "${BATS_TEST_DIRNAME}/../config.sh"; }
   run face_subfont Unknown
   [ "$status" -ne 0 ]
 }
+
+@test "SC TC and HC budgets retain sfnt headroom" {
+  for variant in term-sc term-tc term-hc term-slab-sc term-slab-tc term-slab-hc; do
+    select_variant "$variant"
+    [ "$MD_MAX_KEEP" -eq 4600 ]
+  done
+}

@@ -11,25 +11,26 @@ VARIANTS=(
 )
 select_variant() {
   FONT_VARIANT="$1"
+  # Sarasa v1.0.42 adds base glyphs; SC/TC/HC need a smaller MD budget.
   MD_MAX_KEEP=5100
   FAMILY_LABEL="Term"
   FILE_KIND="Term"
   CASK_KIND="term"
   case "$FONT_VARIANT" in
-    term-sc) LOCALE="SC"; LOCALE_SLUG="sc" ;;
-    term-tc) LOCALE="TC"; LOCALE_SLUG="tc" ;;
+    term-sc) LOCALE="SC"; LOCALE_SLUG="sc"; MD_MAX_KEEP=4600 ;;
+    term-tc) LOCALE="TC"; LOCALE_SLUG="tc"; MD_MAX_KEEP=4600 ;;
     # Japanese adds more base glyphs than the other locales, leaving less room
     # below the sfnt 65535-glyph ceiling for the Material Design subset.
     term-j) LOCALE="J"; LOCALE_SLUG="j"; MD_MAX_KEEP=3600 ;;
     term-k) LOCALE="K"; LOCALE_SLUG="k" ;;
-    term-hc) LOCALE="HC"; LOCALE_SLUG="hc" ;;
+    term-hc) LOCALE="HC"; LOCALE_SLUG="hc"; MD_MAX_KEEP=4600 ;;
     term-cl) LOCALE="CL"; LOCALE_SLUG="cl" ;;
     term-slab-sc)
-      LOCALE="SC"; LOCALE_SLUG="sc"
+      LOCALE="SC"; LOCALE_SLUG="sc"; MD_MAX_KEEP=4600
       FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
       ;;
     term-slab-tc)
-      LOCALE="TC"; LOCALE_SLUG="tc"
+      LOCALE="TC"; LOCALE_SLUG="tc"; MD_MAX_KEEP=4600
       FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
       ;;
     term-slab-j)
@@ -41,7 +42,7 @@ select_variant() {
       FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
       ;;
     term-slab-hc)
-      LOCALE="HC"; LOCALE_SLUG="hc"
+      LOCALE="HC"; LOCALE_SLUG="hc"; MD_MAX_KEEP=4600
       FAMILY_LABEL="Term Slab"; FILE_KIND="TermSlab"; CASK_KIND="term-slab"
       ;;
     term-slab-cl)
