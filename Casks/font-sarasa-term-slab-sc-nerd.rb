@@ -1,8 +1,8 @@
 cask "font-sarasa-term-slab-sc-nerd" do
-  version "v1.0.42"
-  sha256 "fcc35ddbd6b91bd02e7355bcf0934eb6f184b999665af85099c687475a715cce"
+  version "v1.0.43"
+  sha256 "72e43ac172c8dec07500765e0a6ea4d013a4e8e34606b91f59500737bdbe58f5"
 
-  url "https://github.com/wangkezun/homebrew-sarasa-nerd/releases/download/v1.0.42/SarasaTermSlabSCNerdFontMono.ttc"
+  url "https://github.com/wangkezun/homebrew-sarasa-nerd/releases/download/v1.0.43/SarasaTermSlabSCNerdFontMono.ttc"
   name "Sarasa Term Slab SC Nerd Font Mono"
   desc "Sarasa Term Slab SC in five weights patched with Nerd Fonts (CJK 2:1 width preserved)"
   homepage "https://github.com/wangkezun/homebrew-sarasa-nerd"
